@@ -28,14 +28,15 @@ app.get('/', function(req, res) {
   res.render('home')
 });
 
-// get saved articles
+// get saved articles and their comments
 app.get('/saved', function(req, res) {
   db.Article.find({saved: true})
+  .populate("note")
   .then(function(dbArticle) {
     res.render('saved', {articles: dbArticle});
   })
   .catch(function(err) {
-    // res.json(err);
+    res.json(err);
   });
 });
 
@@ -88,14 +89,17 @@ app.put("/save/:id", function(req, res) {
 
   })
   .catch(function(err) {
-    // res.json(err);
+    res.json(err);
   });
+
 });
 
 // unsave article
-app.put("/save/:id", function(req, res) {
-  db.Article.findOneAndUpdate({_id: req.params.id}, {saved: fasle})
-  .then(function() {})
+app.put("/unsave/:id", function(req, res) {
+  db.Article.findOneAndUpdate({_id: req.params.id}, {saved: false})
+  .then(function(dbArticle) {
+    res.json(dbArticle);
+  })
   .catch(function(err){});
   res.redirect('/saved');
 })
@@ -113,12 +117,18 @@ app.post("/add/comment/:id", function(req, res) {
   };
 
   db.Note.create(commentObj)
-  .then(function() {
+  .then(function(dbNote) {
+    return db.Article.findOneAndUpdate({}, { $push: { notes: dbNote._id } }, { new: true });
+  })
+  .then(function(dbArticle){
+    res.json(dbArticle);
   })
   .catch(function(err) {
+    res.json(err);
   });
 
 });
+
 
 // remove a comment
 
