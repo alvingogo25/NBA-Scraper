@@ -1,0 +1,22 @@
+<div class="articles-container">
+  {{#if articles}}
+
+    {{#each articles}}
+      <div id="article" class="card">
+        <div class="card-header">
+          <h5 class="card-title"><a href={{this.link}}>{{this.title}}</a></h5>
+        </div>
+        <div class="card-body">
+          <p class="card-text">{{this.subhead}}</p>
+          <a href="#" class="btn btn-primary">Save Article</a>
+        </div>
+      </div>
+    {{/each}}
+
+  {{else}}
+
+    <div id="intro">
+      <h2>Click Scrape to begin.</h2>
+    </div>
+  {{/if}}
+</div>
