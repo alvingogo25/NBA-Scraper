@@ -25,14 +25,20 @@ mongoose.connect(MONGODB_URI);
 
 // home page
 app.get('/', function(req, res) {
-
   res.render('home')
 });
 
 // get saved articles
 app.get('/saved', function(req, res) {
-
+  db.Article.find({saved: true})
+  .then(function(dbArticle) {
+    res.render('saved', {articles: dbArticle});
+  })
+  .catch(function(err) {
+    // res.json(err);
+  });
 });
+
 // shows scraped articles
 app.get('/articles', function(req, res) {
   db.Article.find({})
@@ -62,11 +68,11 @@ app.get("/scrape", function(req, res) {
 
       // insert data into articles collection
       db.Article.create(articleObj)
-      .then(function(dbArticle) {
+      .then(function() {
       })
       .catch(function(err) {
       });
-      console.log(articleObj)
+      // console.log(articleObj)
 
     });
      res.redirect('/articles')
@@ -75,10 +81,47 @@ app.get("/scrape", function(req, res) {
 
 
 // save an article
+app.put("/save/:id", function(req, res) {
+  db.Article.findOneAndUpdate({_id: req.params.id}, {saved:true})
+  .then(function() {
+    res.redirect('/saved');
+
+  })
+  .catch(function(err) {
+    // res.json(err);
+  });
+});
 
 // unsave article
+app.put("/save/:id", function(req, res) {
+  db.Article.findOneAndUpdate({_id: req.params.id}, {saved: fasle})
+  .then(function() {})
+  .catch(function(err){});
+  res.redirect('/saved');
+})
 
-// all saved articles
+// add a comment
+app.post("/add/comment/:id", function(req, res) {
+  var articleId = req.params.id;
+
+  var commentAuthor = req.body.name;
+  var commentBody = req.body.body;
+
+  var commentObj = {
+    author: commentAuthor,
+    body: commentBody
+  };
+
+  db.Note.create(commentObj)
+  .then(function() {
+  })
+  .catch(function(err) {
+  });
+
+});
+
+// remove a comment
+
 
 // mongoose.connection.on("error", function(error) {
 //   console.log("Database Error:", error);

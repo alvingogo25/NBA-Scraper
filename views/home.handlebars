@@ -2,14 +2,17 @@
   {{#if articles}}
 
     {{#each articles}}
-      <div id="article" class="card">
+      <div id="article" class="card mb-3">
         <div class="card-header">
           <h5 class="card-title"><a href={{this.link}}>{{this.title}}</a></h5>
         </div>
+
         <div class="card-body">
           <p class="card-text">{{this.subhead}}</p>
-          <a href="#" class="btn btn-primary">Save Article</a>
+
+          <a href="#" data-id={{this._id}} class="btn btn-primary save">Save Article</a>
         </div>
+
       </div>
     {{/each}}
 
@@ -18,5 +21,6 @@
     <div id="intro">
       <h2>Click Scrape to begin.</h2>
     </div>
+
   {{/if}}
 </div>

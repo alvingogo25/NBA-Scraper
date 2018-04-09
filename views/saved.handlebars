@@ -1,12 +1,41 @@
 <div id="saved-container">
-  {{#each article}}
-    <div id="artilce" class="card">
+  {{#each articles}}
+    <div id="artilce" class="card mb-3">
       <div class="card-header">
         <h5 class="card-title"><a href={{this.link}}>{{this.title}}</a></h5>
       </div>
+
       <div class="card-body">
         <p class="card-text">{{this.subhead}}</p>
-        <a href="#" class="btn btn-primary">Add Note</a>
+        <button class="btn btn-danger">Unsave Note</button>
+        <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+    Comments
+    </button>
+      </div>
+      <!-- comments -->
+      <div class="collapse" id="collapseExample">
+        <button class="btn btn-primary">Add Comment</button>
+        {{#if comments}}
+
+          <ul class="collection">
+            {{#each comments}}
+
+              <li class="collection-item">
+                <b>{{author}}</b>{{!-- delete comment --}}
+                <span class="badge">
+                <form id="form-delete-{{_id}}" action="remove/comment/{{_id}}" method="post">
+                  <input class="btn-small delete-comment-button" data-id="{{_id}}" type="submit" value="Delete" style="color: white; background-color: red; border-color: red;">
+                </form>
+              </span> {{body}}
+
+              </li>
+            {{/each}}
+          </ul>
+
+          {{!-- if no comments --}}
+        {{else}}
+          <p>No Comments Yet.</p>
+        {{/if}}
       </div>
     </div>
   {{/each}}
